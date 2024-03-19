@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database {
-//        public static List<Question> list = new ArrayList<>();
+//        public static List<entity.Question> list = new ArrayList<>();
         public static Connection connectDatabase() {
             Connection conn = null;
             try {
@@ -15,7 +15,7 @@ public class Database {
 //                    while (rs.next()) {
 //                        int id = rs.getInt("id");
 //                        String content = rs.getString("content");
-//                        Question question = new Question(id, content);
+//                        entity.Question question = new entity.Question(id, content);
 //                        list.add(question);
 //                    }
 //                } catch (SQLException e) {
@@ -30,7 +30,7 @@ public class Database {
 
     public static void main(String[] args) {
         connectDatabase();
-//        for(Question q: list){
+//        for(entity.Question q: list){
 //            System.out.println(q);
 //        }
     }
