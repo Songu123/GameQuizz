@@ -1,7 +1,5 @@
 package dao;
 
-import entity.Answer;
-import entity.Question;
 import entity.Quizz;
 import entity.User;
 
@@ -12,28 +10,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionDAO {
+public class QuizzDAO {
     private final Connection connection;
 
-    public QuestionDAO(Connection connection) {
+    public QuizzDAO(Connection connection) {
         this.connection = connection;
     }
 
-    public List<Question> getAllQuestions() {
-        List<Question> questions = new ArrayList<>();
-        String query = "Select * from questions";
+    public List<Quizz> getAllQuizzes() {
+        List<Quizz> quizzes = new ArrayList<>();
+        String query = "Select * from quizzes";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
-                String content = rs.getString("content");
-                int quizzId = rs.getInt("quizzes_id");
-                Question question = new Question(id, content, quizzId);
-                questions.add(question);
+                String name = rs.getString("name");
+                int userId = rs.getInt("users_id");
+                Quizz quizz = new Quizz(id, name, userId);
+                quizzes.add(quizz);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return questions;
+        return quizzes;
     }
 }

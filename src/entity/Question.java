@@ -1,13 +1,17 @@
+package entity;
+
 public class Question {
     private int id;
     private String content;
+    private int quizId;
 
     public Question() {
     }
 
-    public Question(int id, String content) {
+    public Question(int id, String content, int quizId) {
         this.id = id;
         this.content = content;
+        this.quizId = quizId;
     }
 
     public int getId() {
@@ -22,6 +26,14 @@ public class Question {
         return content;
     }
 
+    public int getQuizzes_id() {
+        return quizId;
+    }
+
+    public void setQuizzes_id(int quizId) {
+        this.quizId = quizId;
+    }
+
     public void setContent(String content) {
         this.content = content;
     }
@@ -31,6 +43,7 @@ public class Question {
         return "Question{" +
                 "id=" + id +
                 ", content='" + content + '\'' +
+                ", quizId=" + quizId +
                 '}';
     }
 }

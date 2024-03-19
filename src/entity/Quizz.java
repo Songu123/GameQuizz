@@ -1,9 +1,11 @@
+package entity;
+
 public class Quizz {
     private int id;
     private String name;
     private String userId;
 
-    public Quizz(){}
+    public Quizz(int id, String name, int userId){}
 
     public Quizz(int id, String name, String userId){
         this.id = id;
