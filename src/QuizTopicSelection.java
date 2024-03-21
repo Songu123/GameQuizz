@@ -81,7 +81,7 @@ public class QuizTopicSelection extends JFrame {
         setVisible(true);
     }
 
-//    Kiểm tra trong Quizz có câu hỏi hay không
+    //    Kiểm tra trong Quizz có câu hỏi hay không
     public static boolean checkExist(int quizzId){
         boolean success = false;
         try {
