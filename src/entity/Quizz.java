@@ -3,11 +3,10 @@ package entity;
 public class Quizz {
     private int id;
     private String name;
-    private String userId;
+    private int userId;
 
-    public Quizz(int id, String name, int userId){}
 
-    public Quizz(int id, String name, String userId){
+    public Quizz(int id, String name, int userId){
         this.id = id;
         this.name = name;
         this.userId = userId;
@@ -29,11 +28,11 @@ public class Quizz {
         this.name = name;
     }
 
-    public String getUserId(){
+    public int getUserId(){
         return this.userId;
     }
 
-    public void setUserId(String userId){
+    public void setUserId(int userId){
         this.userId = userId;
     }
 

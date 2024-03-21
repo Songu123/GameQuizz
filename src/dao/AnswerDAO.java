@@ -26,8 +26,8 @@ public class AnswerDAO {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String content = rs.getString("content");
-                int questionId = rs.getInt("questionId");
-                boolean isCorrect = rs.getBoolean("is_true");
+                int questionId = rs.getInt("question_id");
+                boolean isCorrect = rs.getBoolean("is_correct");
                 Answer answer = new Answer(id, content, questionId, isCorrect);
                 answers.add(answer);
             }
