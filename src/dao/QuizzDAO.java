@@ -25,7 +25,7 @@ public class QuizzDAO {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
-                int userId = rs.getInt("users_id");
+                int userId = rs.getInt("user_id");
                 Quizz quizz = new Quizz(id, name, userId);
                 quizzes.add(quizz);
             }
