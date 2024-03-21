@@ -1,5 +1,3 @@
-package LoginAdmin;
-
 import dao.UserDAO;
 import database.Database;
 import entity.User;
@@ -14,26 +12,23 @@ import java.util.List;
 
 public class LoginAdmin extends JFrame {
 
-//    public static Database database = new Database();
-    public static List<User> userList = new ArrayList<>();
-    private JTextField jUsername;
-    private JPasswordField jPassword;
-    private JLabel username;
-    private JLabel password;
-    private JPanel containerLoginAdmin;
+    private static List<User> userList = new ArrayList<>();
+    private JTextField usernameAdmin;
+    private JPasswordField passwordAdmin;
+    private JPanel containerAdmin;
     private JButton logInButton;
 
     public LoginAdmin(){
-        setContentPane(containerLoginAdmin);
-        setTitle("Log In");
+        setContentPane(containerAdmin);
+        setTitle("Login Admin");
         setSize(300,250);
         setLocationRelativeTo(null);
         setVisible(true);
         logInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String username = jUsername.getText();
-                String password = new String(jPassword.getPassword()); // Use getPassword() to retrieve the password securely
+                String username = usernameAdmin.getText();
+                String password = new String(passwordAdmin.getPassword()); // Use getPassword() to retrieve the password securely
                 boolean loginSuccess = checkLogin(username, password);
                 if (loginSuccess) dispose();
             }
@@ -48,7 +43,8 @@ public class LoginAdmin extends JFrame {
             userList = userDAO.getAllUsers();
             for (User u : userList){
                 if (u.getName().equals(username) && u.getPassword().equals(password)){
-                   Quiz
+                    QuizTopicSelection quizTopicSelection = new QuizTopicSelection();
+                    quizTopicSelection.setVisible(true);
                     flag = true;
                 }else {
                     JOptionPane.showMessageDialog(null, "Incorrect username or password. Please try again.");
@@ -58,8 +54,5 @@ public class LoginAdmin extends JFrame {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-    public static void main(String[] args) {
-        LoginAdmin login = new LoginAdmin();
     }
 }

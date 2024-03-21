@@ -38,4 +38,16 @@ public class ResultDAO {
         }
         return results;
     }
+
+    public void insertResult(Result result) {
+        String query = "INSERT INTO results (user_id, quizz_id, time) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, result.getUserId());
+            ps.setInt(2, result.getQuizId());
+            ps.setDate(3, new java.sql.Date(result.getTime().getTime())); // Convert java.util.Date to java.sql.Date
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error inserting result", e);
+        }
+    }
 }
