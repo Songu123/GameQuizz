@@ -1,17 +1,23 @@
 package entity;
 
-import java.util.Date;
+//import java.util.String;
 
 public class Result {
     private int id;
     private int userId;
     private int quizId;
-    private Date time;
+    private String time;
 
     public Result() {
     }
-    public Result(int id, int userId, int quizId, Date time) {
+    public Result(int id, int userId, int quizId, String time) {
         this.id = id;
+        this.userId = userId;
+        this.quizId = quizId;
+        this.time = time;
+    }
+
+    public Result(int userId, int quizId, String time) {
         this.userId = userId;
         this.quizId = quizId;
         this.time = time;
@@ -41,11 +47,11 @@ public class Result {
         this.quizId = quizId;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

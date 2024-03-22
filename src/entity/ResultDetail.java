@@ -14,6 +14,13 @@ public class ResultDetail {
         this.isTrue = isTrue;
     }
 
+    public ResultDetail(int resultId, int questionId, int answerId, boolean isTrue){
+        this.resultId = resultId;
+        this.questionId = questionId;
+        this.answerId = answerId;
+        this.isTrue = isTrue;
+    }
+
     public ResultDetail() {
     }
 

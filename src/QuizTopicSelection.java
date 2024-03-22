@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionListener;
@@ -19,10 +21,12 @@ public class QuizTopicSelection extends JFrame {
     private static List<Quizz> quizzList = new ArrayList<>();
     private List<Integer> indexQuizzList = new ArrayList<>();
 
+    private static String currentTime = CurrentTime.getCurrentTime();
+
     private JComboBox<String> quizComboBox;
     private JButton startButton;
 
-    public QuizTopicSelection() {
+    public QuizTopicSelection(int userId) {
         setTitle("Quiz Topic Selection");
         setSize(300, 150);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,7 +73,7 @@ public class QuizTopicSelection extends JFrame {
                     JOptionPane.showMessageDialog(null, "You selected: " + selectedQuiz);
                     // Add your code here to start the selected quiz
                     if (checkExist(indexQuizzList.get(indexQuiz))){
-                        Quiz quiz = new Quiz(indexQuizzList.get(indexQuiz));
+                        Quiz quiz = new Quiz(indexQuizzList.get(indexQuiz),userId, currentTime);
                     }else {
                         JOptionPane.showMessageDialog(null, "Không có câu hỏi nào trong đề này");
                     }
@@ -82,13 +86,13 @@ public class QuizTopicSelection extends JFrame {
     }
 
     //    Kiểm tra trong Quizz có câu hỏi hay không
-    public static boolean checkExist(int quizzId){
+    public static boolean checkExist(int quizzId) {
         boolean success = false;
         try {
             QuestionDAO questionDAO = new QuestionDAO(Database.getConnection());
             List<Question> questionlist = questionDAO.getAllQuestions();
 
-            for (Question q: questionlist){
+            for (Question q : questionlist) {
                 if (q.getQuizzes_id() == quizzId) {
                     success = true;
                     break;
@@ -97,15 +101,15 @@ public class QuizTopicSelection extends JFrame {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
         return success;
+
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new QuizTopicSelection();
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                new QuizTopicSelection();
+//            }
+//        });
+//    }
 }

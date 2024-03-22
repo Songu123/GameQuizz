@@ -46,7 +46,7 @@ public class LoginUser extends JFrame {
             userList = userDAO.getAllUsers();
             for (User u : userList){
                 if (u.getName().equals(username) && u.getPassword().equals(password)){
-                    QuizTopicSelection quizTopicSelection = new QuizTopicSelection();
+                    QuizTopicSelection quizTopicSelection = new QuizTopicSelection(u.getId());
                     quizTopicSelection.setVisible(true);
                     flag = true;
                 }else {

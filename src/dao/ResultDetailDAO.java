@@ -1,5 +1,6 @@
 package dao;
 
+import database.Database;
 import entity.*;
 
 import java.sql.Connection;
@@ -35,5 +36,21 @@ public class ResultDetailDAO {
             throw new RuntimeException(e);
         }
         return resultDetails;
+    }
+
+    public void insertResultDetails(ResultDetail resultDetail) {
+        String sql = "INSERT INTO result_details (result_id, question_id, answer_id, is_true) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, resultDetail.getResultId());
+            ps.setInt(2, resultDetail.getQuestionId());
+            ps.setInt(3, resultDetail.getAnswerId());
+            ps.setBoolean(4, resultDetail.isTrue());
+            ps.execute();
+            System.out.println("ResultDetails inserted successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error inserting result details:");
+            e.printStackTrace(); // Print stack trace for debugging
+            throw new RuntimeException("Error inserting result details", e);
+        }
     }
 }
