@@ -1,13 +1,21 @@
+import com.sun.net.httpserver.Authenticator;
 import dao.AnswerDAO;
 import dao.QuestionDAO;
+import dao.ResultDAO;
+import dao.ResultDetailDAO;
 import database.Database;
 import entity.Answer;
 import entity.Question;
+import entity.Result;
+import entity.ResultDetail;
 
+import javax.naming.spi.DirStateFactory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -18,6 +26,7 @@ public class Quiz extends JFrame {
     private static List<Question> questionQuizz = new ArrayList<>();
     private static List<Answer> answerQuizz = new ArrayList<Answer>();
     private static List<Answer> answerList = new ArrayList<>();
+    private static Result result;
     private JTextField jTextQuestion;
     private JRadioButton answer1;
     private JRadioButton answer2;
@@ -34,8 +43,10 @@ public class Quiz extends JFrame {
     public static int point = 0;
 
 
-    public Quiz(int quizzId) {
+    public Quiz(int quizzId, int userId, String currentTime) {
 //        JFrame frame = new JFrame("Quiz");
+        addResult(userId, quizzId, currentTime);
+
         setContentPane(containerGame);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 450);
@@ -49,23 +60,35 @@ public class Quiz extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String selectedValue = getSelectedAnswerText(buttonGroup);
-                JOptionPane.showMessageDialog(null, "Selected Value: " + selectedValue);
-                checkSelectedAnswerText(answerQuizz);
+                int selectedAnswerId = getSelectAnswerId(answerQuizz);
+                boolean isCorrect = getIsCorrect(answerQuizz, selectedAnswerId);
+
+                try {
+                    ResultDAO rd = new ResultDAO(Database.getConnection());
+                    int resultId = rd.getResultId(currentTime); // Insert result and get its ID
+                    addResultDetail(resultId, questionlist.get(index).getId(), selectedAnswerId, isCorrect);
+                } catch (SQLException e) {
+                    throw new RuntimeException("Error while adding result details", e);
+                }
+
                 answerQuizz.clear();
-                if (index <= questionQuizz.size()) {
-//                    List<Answer> answerQuizz = new ArrayList<>();
-                    System.out.println(questionQuizz.size());
+
+                if (index < questionQuizz.size()) {
+                    // Move to the next question
                     index++;
                     int i = 0;
 
                     indexQuestion.setText("Câu " + (index + 1) + ":");
                     jTextQuestion.setText(questionQuizz.get(index).getContent());
 
+                    // Populate answer options for the next question
                     for (Answer a : answerList) {
                         if (a.getQuestionId() == questionQuizz.get(index).getId()) {
                             answerQuizz.add(a);
                         }
                     }
+
+                    // Set answer options on the UI
                     for (Answer a : answerQuizz) {
                         switch (i) {
                             case 0:
@@ -101,6 +124,7 @@ public class Quiz extends JFrame {
                 }
             }
         });
+
 
 
         try {
@@ -155,13 +179,13 @@ public class Quiz extends JFrame {
                         i++;
                     }
                 }
-
             buttonGroup.clearSelection(); // Clear the selection of JRadioButtons
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+// Hàm lấy dữ liệu đáp án đã chọn
     private String getSelectedAnswerText(ButtonGroup buttonGroup) {
         for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
@@ -169,10 +193,11 @@ public class Quiz extends JFrame {
                 return button.getText();
             }
         }
-        return null; // Return null if no radio button is selected
+        return null;
     }
 
-    private void checkSelectedAnswerText(List<Answer> answerQuizz){
+//    Hàm kiểm tra id của đáp án đã được chọn
+    private int getSelectAnswerId(List<Answer> answerQuizz){
         String selectAnswerText = getSelectedAnswerText(buttonGroup);
         int selectedAnswerId = 0;
 
@@ -183,13 +208,47 @@ public class Quiz extends JFrame {
             }
         }
 
-        System.out.println(getSelectedAnswerText(buttonGroup));
-        System.out.println(selectedAnswerId);
+//        System.out.println(getSelectedAnswerText(buttonGroup));
+//        System.out.println(selectedAnswerId);
+        return selectedAnswerId;
+    }
+
+//    Lấy dữ liệu đúng sai của đáp án
+    private boolean getIsCorrect(List<Answer> answerQuizz, int answerId ){
+        boolean isTrue = false;
+        for (Answer a: answerQuizz){
+            if (a.getId() == answerId){
+                isTrue = a.isCorrect();
+            }
+        }
+        return isTrue;
     }
 
 
+//    Chèn dữ liệu vào table Result
+    private void addResult(int userId, int quizzId, String time){
+        result = new Result(userId, quizzId, time);
+        try {
+            ResultDAO resultDAO = new ResultDAO(Database.getConnection());
+            resultDAO.insertResult(result);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+//    Chèn dữ liệu vào table ResultDetail
+    private void addResultDetail(int resultId, int questionId, int answerId, boolean isTrue){
+        ResultDetail rd = new ResultDetail(resultId, questionId, answerId, isTrue);
+        try{
+            ResultDetailDAO resultDetailDAO = new ResultDetailDAO(Database.getConnection());
+            resultDetailDAO.insertResultDetails(rd);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static void main(String[] args) throws SQLException {
-        Quiz quiz = new Quiz(1);
+        Quiz quiz = new Quiz(1,1, CurrentTime.getCurrentTime());
     }
 
 
