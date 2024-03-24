@@ -27,6 +27,7 @@ public class Quiz extends JFrame {
     private static List<Answer> answerQuizz = new ArrayList<Answer>();
     private static List<Answer> answerList = new ArrayList<>();
     private static Result result;
+    private static int resultId;
     private JTextField jTextQuestion;
     private JRadioButton answer1;
     private JRadioButton answer2;
@@ -40,7 +41,8 @@ public class Quiz extends JFrame {
     private JLabel indexQuestion;
 
     public static int index = 0;
-    public static int point = 0;
+    public static int countQuestion = 0;
+
 
 
     public Quiz(int quizzId, int userId, String currentTime) {
@@ -61,11 +63,12 @@ public class Quiz extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 String selectedValue = getSelectedAnswerText(buttonGroup);
                 int selectedAnswerId = getSelectAnswerId(answerQuizz);
+                countQuestion = getCountQuestion(quizzId);
                 boolean isCorrect = getIsCorrect(answerQuizz, selectedAnswerId);
 
                 try {
                     ResultDAO rd = new ResultDAO(Database.getConnection());
-                    int resultId = rd.getResultId(currentTime); // Insert result and get its ID
+                    resultId = rd.getResultId(currentTime); // Insert result and get its ID
                     addResultDetail(resultId, questionlist.get(index).getId(), selectedAnswerId, isCorrect);
                 } catch (SQLException e) {
                     throw new RuntimeException("Error while adding result details", e);
@@ -73,7 +76,7 @@ public class Quiz extends JFrame {
 
                 answerQuizz.clear();
 
-                if (index < questionQuizz.size()) {
+                if (index < questionQuizz.size()-1) {
                     // Move to the next question
                     index++;
                     int i = 0;
@@ -118,7 +121,9 @@ public class Quiz extends JFrame {
 
                     buttonGroup.clearSelection(); // Clear the selection of JRadioButtons
                 } else {
+
                     JOptionPane.showMessageDialog(null, "Bạn đã hoàn thành bài thi!"); // Display completion message
+                    JOptionPane.showMessageDialog(null, "Số câu đúng: " + getPointQuizz(resultId) + "/" + countQuestion); // Display completion message
                     questionQuizz.clear();
                     dispose();
                 }
@@ -247,8 +252,38 @@ public class Quiz extends JFrame {
             throw new RuntimeException(e);
         }
     }
+
+    private int getPointQuizz(int resultId){
+        List<ResultDetail> resultDetails = new ArrayList<>();
+        int sum = 0;
+        try {
+            ResultDetailDAO resultDetailDAO = new ResultDetailDAO(Database.getConnection());
+            resultDetails = resultDetailDAO.getResultDetail(resultId);
+            for (ResultDetail rd: resultDetails){
+                if (rd.isTrue()){
+                    sum++;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return sum;
+    }
+
+    private int getCountQuestion(int quizzId){
+        int count = 0;
+        try {
+            QuestionDAO questionDAO = new QuestionDAO(Database.getConnection());
+            count = questionDAO.getCountQuestion(quizzId);
+            System.out.println(count);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return count;
+    }
     public static void main(String[] args) throws SQLException {
         Quiz quiz = new Quiz(1,1, CurrentTime.getCurrentTime());
+
     }
 
 

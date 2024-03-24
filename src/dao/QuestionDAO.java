@@ -36,4 +36,19 @@ public class QuestionDAO {
         }
         return questions;
     }
+
+    public int getCountQuestion(int quizzId){
+        int quantityQuestion = 0;
+        String sql = "select count(*) as count_question from questions where quizz_id = ?";
+        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, quizzId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                quantityQuestion = rs.getInt("count_question");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return quantityQuestion;
+    }
 }
