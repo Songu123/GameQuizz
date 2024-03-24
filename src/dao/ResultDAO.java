@@ -15,6 +15,7 @@ public class ResultDAO {
         this.connection = connection;
     }
 
+//    Lấy hết tất cả dữ liệu table results
     public List<Result> getAllResults() {
         List<Result> results = new ArrayList<>();
         String query = "Select * from results";
@@ -34,6 +35,7 @@ public class ResultDAO {
         return results;
     }
 
+//   Lấy resultId từ time
     public int getResultId(String time){
         int id = 0;
         String query = "select * from results where time = ? ";
@@ -49,6 +51,7 @@ public class ResultDAO {
         return id;
     }
 
+//    Thêm result mới
     public void insertResult(Result result) {
         String sql = "INSERT INTO results (user_id, quiz_id, time) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
