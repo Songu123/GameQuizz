@@ -36,4 +36,24 @@ public class AnswerDAO {
         }
         return answers;
     }
+
+    public List<Answer> getAnswersWithQuestionId(int questionId) {
+        List<Answer> answers = new ArrayList<>();
+        String query = "Select * from answers where quesiton_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, questionId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String content = rs.getString("content");
+                int question_id = rs.getInt("question_id");
+                boolean isCorrect = rs.getBoolean("is_correct");
+                Answer answer = new Answer(id, content, question_id, isCorrect);
+                answers.add(answer);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return answers;
+    }
 }

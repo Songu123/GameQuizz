@@ -270,6 +270,7 @@ public class Quiz extends JFrame {
         return sum;
     }
 
+//    Lấy số câu hỏi trong đề
     private int getCountQuestion(int quizzId){
         int count = 0;
         try {
@@ -280,6 +281,10 @@ public class Quiz extends JFrame {
             throw new RuntimeException(e);
         }
         return count;
+    }
+
+    private void showAnswers(){
+
     }
     public static void main(String[] args) throws SQLException {
         Quiz quiz = new Quiz(1,1, CurrentTime.getCurrentTime());
