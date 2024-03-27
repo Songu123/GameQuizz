@@ -1,3 +1,6 @@
+package gui;
+
+import common.CurrentTime;
 import dao.QuestionDAO;
 import dao.QuizzDAO;
 import database.Database;
@@ -7,24 +10,30 @@ import entity.Quizz;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.lang.reflect.Array;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuizTopicSelection extends JFrame {
     private static List<Quizz> quizzList = new ArrayList<>();
     private List<Integer> indexQuizzList = new ArrayList<>();
 
-    private static String currentTime = CurrentTime.getCurrentTime();
+    private String currentTime = CurrentTime.getCurrentTime();
 
     private JComboBox<String> quizComboBox;
     private JButton startButton;
+    private JButton cancelButton; // Thêm nút cancel
 
     public QuizTopicSelection(int userId) {
         setTitle("Quiz Topic Selection");
@@ -33,23 +42,20 @@ public class QuizTopicSelection extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new FlowLayout());
 
-        // Create JComboBox with quiz options
         try {
             Connection conn = Database.getConnection();
             QuizzDAO quizzDAO = new QuizzDAO(conn);
             quizzList = quizzDAO.getAllQuizzes();
 
-            // Create a list to hold the quiz names
             List<String> contentQuizzList = new ArrayList<>();
             indexQuizzList = new ArrayList<>();
-            for (Quizz q: quizzList){
+            for (Quizz q : quizzList) {
                 System.out.println(q);
                 contentQuizzList.add(q.getName());
                 indexQuizzList.add(q.getId());
             }
 
-            // Create the JComboBox with the list of quiz names
-            List<String> quizList = contentQuizzList; // Assuming you have a method to retrieve quiz topics
+            List<String> quizList = contentQuizzList;
             quizComboBox = new JComboBox<>(quizList.toArray(new String[0]));
             add(new JLabel("Select a quiz:"));
             add(quizComboBox);
@@ -57,35 +63,46 @@ public class QuizTopicSelection extends JFrame {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        cancelButton = new JButton("Cancel");
 
-
-// Create Start button
         startButton = new JButton("Start Quiz");
-        add(startButton);
 
-        // Add action listener to Start button
+        add(cancelButton);
+
+        add(startButton);
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedQuiz = (String) quizComboBox.getSelectedItem();
-                int indexQuiz = quizComboBox.getSelectedIndex();
-                if (selectedQuiz != null) {
-                    JOptionPane.showMessageDialog(null, "You selected: " + selectedQuiz);
-                    // Add your code here to start the selected quiz
-                    if (checkExist(indexQuizzList.get(indexQuiz))){
-                        Quiz quiz = new Quiz(indexQuizzList.get(indexQuiz),userId, currentTime);
-                    }else {
-                        JOptionPane.showMessageDialog(null, "Không có câu hỏi nào trong đề này");
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Please select a quiz");
-                }
+                startQuiz(userId);
             }
         });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Thực hiện hành động khi nút cancel được nhấn
+                dispose(); // Đóng cửa sổ hiện tại
+            }
+        });
+
         setVisible(true);
     }
 
-    //    Kiểm tra trong Quizz có câu hỏi hay không
+    private void startQuiz(int userId) {
+        String selectedQuiz = (String) quizComboBox.getSelectedItem();
+        int indexQuiz = quizComboBox.getSelectedIndex();
+        if (selectedQuiz != null) {
+            JOptionPane.showMessageDialog(null, "You selected: " + selectedQuiz);
+            if (checkExist(indexQuizzList.get(indexQuiz))) {
+                BeginQuizz quiz = new BeginQuizz(indexQuizzList.get(indexQuiz), userId, currentTime);
+            } else {
+                JOptionPane.showMessageDialog(null, "Không có câu hỏi nào trong đề này");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a quiz");
+        }
+    }
+
     public static boolean checkExist(int quizzId) {
         boolean success = false;
         try {
@@ -102,8 +119,9 @@ public class QuizTopicSelection extends JFrame {
             throw new RuntimeException(e);
         }
         return success;
-
     }
+}
+
 //    public static void main(String[] args) {
 //        SwingUtilities.invokeLater(new Runnable() {
 //            @Override
@@ -112,4 +130,4 @@ public class QuizTopicSelection extends JFrame {
 //            }
 //        });
 //    }
-}
+//}
