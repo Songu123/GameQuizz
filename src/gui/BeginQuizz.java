@@ -1,4 +1,6 @@
-import com.sun.net.httpserver.Authenticator;
+package gui;
+
+import common.CurrentTime;
 import dao.AnswerDAO;
 import dao.QuestionDAO;
 import dao.ResultDAO;
@@ -9,18 +11,15 @@ import entity.Question;
 import entity.Result;
 import entity.ResultDetail;
 
-import javax.naming.spi.DirStateFactory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-public class Quiz extends JFrame {
+public class BeginQuizz extends JFrame {
     private static Database database = new Database();
     private static List<Question> questionlist = new ArrayList<>();
     private static List<Question> questionQuizz = new ArrayList<>();
@@ -45,7 +44,7 @@ public class Quiz extends JFrame {
 
 
 
-    public Quiz(int quizzId, int userId, String currentTime) {
+    public BeginQuizz(int quizzId, int userId, String currentTime) {
 //        JFrame frame = new JFrame("Quiz");
         addResult(userId, quizzId, currentTime);
 
@@ -61,6 +60,11 @@ public class Quiz extends JFrame {
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                if (buttonGroup.getSelection() == null) {
+                    JOptionPane.showMessageDialog(BeginQuizz.this, "Vui lòng chọn một câu trả lời", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    return; // Exit the actionPerformed method if no radio button is selected
+                }
+
                 String selectedValue = getSelectedAnswerText(buttonGroup);
                 int selectedAnswerId = getSelectAnswerId(answerQuizz);
                 countQuestion = getCountQuestion(quizzId);
@@ -113,17 +117,13 @@ public class Quiz extends JFrame {
                         i++;
                     }
 
-                    // Check if any radio button is selected
-                    if (buttonGroup.getSelection() == null) {
-                        JOptionPane.showMessageDialog(Quiz.this, "Vui lòng chọn một câu trả lời", "Thông báo", JOptionPane.WARNING_MESSAGE);
-                        return; // Exit the actionPerformed method if no radio button is selected
-                    }
-
                     buttonGroup.clearSelection(); // Clear the selection of JRadioButtons
                 } else {
 
                     JOptionPane.showMessageDialog(null, "Bạn đã hoàn thành bài thi!"); // Display completion message
                     JOptionPane.showMessageDialog(null, "Số câu đúng: " + getPointQuizz(resultId) + "/" + countQuestion); // Display completion message
+                    int result = showConfirmDialog(getPointQuizz(resultId), countQuestion);
+                    checkCofirmDialog(result, quizzId,resultId);
                     questionQuizz.clear();
                     dispose();
                 }
@@ -184,6 +184,9 @@ public class Quiz extends JFrame {
                         i++;
                     }
                 }
+            // Check if any radio button is selected
+
+
             buttonGroup.clearSelection(); // Clear the selection of JRadioButtons
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -283,13 +286,24 @@ public class Quiz extends JFrame {
         return count;
     }
 
-    private void showAnswers(){
-
+    public static int showConfirmDialog(int answerCorrect, int sumQuestion) {
+        String message = "Số câu đúng: " + answerCorrect + "/" + sumQuestion + "\nBạn có muốn xem lại bài thi không?";
+        return JOptionPane.showConfirmDialog(null, message, "Xác nhận xem lại bài thi", JOptionPane.YES_NO_OPTION);
     }
-    public static void main(String[] args) throws SQLException {
-        Quiz quiz = new Quiz(1,1, CurrentTime.getCurrentTime());
 
+    public static void checkCofirmDialog(int result, int quizId, int resultId){
+        if (result == JOptionPane.YES_OPTION) {
+            System.out.println("Bạn đã chọn Yes để xem lại bài thi.");
+            ShowAnswer showAnswer = new ShowAnswer(quizId, resultId);
+
+        } else {
+            System.out.println("Bạn đã chọn No hoặc đã đóng hộp thoại.");
+            // Thêm mã để xử lý khi người dùng chọn "No" hoặc đóng hộp thoại ở đây
+        }
     }
+//    public static void main(String[] args) throws SQLException {
+//        BeginQuizz quiz = new BeginQuizz(1,1, CurrentTime.getCurrentTime());
+//    }
 
 
 }

@@ -1,3 +1,5 @@
+package gui;
+
 import dao.UserDAO;
 import database.Database;
 import entity.User;
@@ -10,25 +12,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoginAdmin extends JFrame {
+public class LoginUser extends JFrame {
 
-    private static List<User> userList = new ArrayList<>();
-    private JTextField usernameAdmin;
-    private JPasswordField passwordAdmin;
-    private JPanel containerAdmin;
+//    public static Database database = new Database();
+    public static List<User> userList = new ArrayList<>();
+    private JTextField jUsername;
+    private JPasswordField jPassword;
+    private JLabel username;
+    private JLabel password;
+    private JPanel containerLogin;
     private JButton logInButton;
 
-    public LoginAdmin(){
-        setContentPane(containerAdmin);
-        setTitle("Login Admin");
+    public LoginUser(){
+        setContentPane(containerLogin);
+        setTitle("Log In");
         setSize(300,250);
         setLocationRelativeTo(null);
         setVisible(true);
         logInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String username = usernameAdmin.getText();
-                String password = new String(passwordAdmin.getPassword()); // Use getPassword() to retrieve the password securely
+                String username = jUsername.getText();
+                String password = new String(jPassword.getPassword()); // Use getPassword() to retrieve the password securely
                 boolean loginSuccess = checkLogin(username, password);
                 if (loginSuccess) dispose();
             }
@@ -43,8 +48,8 @@ public class LoginAdmin extends JFrame {
             userList = userDAO.getAllUsers();
             for (User u : userList){
                 if (u.getName().equals(username) && u.getPassword().equals(password)){
-//                    QuizTopicSelection quizTopicSelection = new QuizTopicSelection(u.getId());
-//                    quizTopicSelection.setVisible(true);
+                    QuizTopicSelection quizTopicSelection = new QuizTopicSelection(u.getId());
+                    quizTopicSelection.setVisible(true);
                     flag = true;
                 }else {
                     JOptionPane.showMessageDialog(null, "Incorrect username or password. Please try again.");
@@ -54,5 +59,8 @@ public class LoginAdmin extends JFrame {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    public static void main(String[] args) {
+        LoginUser login = new LoginUser();
     }
 }

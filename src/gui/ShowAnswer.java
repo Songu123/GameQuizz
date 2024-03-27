@@ -1,3 +1,5 @@
+package gui;
+
 import dao.AnswerDAO;
 import dao.QuestionDAO;
 import dao.ResultDetailDAO;
@@ -115,7 +117,7 @@ public class ShowAnswer extends JFrame {
         return userAnswer;
     }
 
-    public static void main(String[] args) {
-        ShowAnswer showAnswer = new ShowAnswer(1, 14);
-    }
+//    public static void main(String[] args) {
+//        ShowAnswer showAnswer = new ShowAnswer(1, 14);
+//    }
 }

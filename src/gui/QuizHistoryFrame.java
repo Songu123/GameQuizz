@@ -1,3 +1,5 @@
+package gui;
+
 import database.Database;
 import entity.QuizHistoryEntry;
 
@@ -5,6 +7,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,6 +51,12 @@ public class QuizHistoryFrame extends JFrame {
         historyTable.setGridColor(Color.BLACK);
         historyTable.setIntercellSpacing(new Dimension(0, 0)); // Đặt khoảng cách giữa các ô là 0
 
+        // Đặt kích thước chữ cho nội dung ô
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+        cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        cellRenderer.setFont(new Font("Arial", Font.PLAIN, 15)); // Đặt kích thước chữ là 14
+        historyTable.setDefaultRenderer(Object.class, cellRenderer);
+
         // Lấy dữ liệu từ cơ sở dữ liệu và thêm vào bảng
         try {
             List<QuizHistoryEntry> quizHistory = getQuizHistoryFromDatabase(userId);
@@ -64,6 +74,15 @@ public class QuizHistoryFrame extends JFrame {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Không thể lấy dữ liệu từ cơ sở dữ liệu.");
         }
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Đóng JFrame khi nút Cancel được nhấn
+            }
+        });
+        add(cancelButton, BorderLayout.SOUTH);
 
         setVisible(true);
     }
