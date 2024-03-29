@@ -37,6 +37,22 @@ public class QuestionDAO {
         return questions;
     }
 
+    public int insertQuestion(String content, int quizzId){
+        int questionId = 0;
+        String sql = "Insert into questions(content, quizz_id) values (?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, content);
+            ps.setInt(2, quizzId);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return questionId;
+    }
+
     public int getCountQuestion(int quizzId){
         int quantityQuestion = 0;
         String sql = "select count(*) as count_question from questions where quizz_id = ?";

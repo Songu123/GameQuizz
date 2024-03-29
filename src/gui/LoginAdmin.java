@@ -52,7 +52,7 @@ public class LoginAdmin extends JFrame {
                     int isTrue = (u.getRole()) ? 1 : 0;
 
                     if (isTrue == 1) {
-                        System.out.println("Hello admin");
+                        AdminFrame adminFrame = new AdminFrame(u.getId());
                         flag = true;
                         found = true;
                         break;
