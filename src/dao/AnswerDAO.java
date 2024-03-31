@@ -57,13 +57,13 @@ public class AnswerDAO {
         return answers;
     }
 
-    public void insertAnswer(String content, int questionId, int isCorrect){
+    public void insertAnswer(String content, int questionId, Boolean isCorrect){
         String sql = "Insert into answers(content, question_id, is_correct) values (?, ?, ?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, content);
             ps.setInt(2, questionId);
-            ps.setInt(3, isCorrect);
+            ps.setBoolean(3, isCorrect);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

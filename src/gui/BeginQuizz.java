@@ -39,15 +39,15 @@ public class BeginQuizz extends JFrame {
     private JPanel containerGame;
     private JLabel indexQuestion;
 
+
     public static int index = 0;
     public static int countQuestion = 0;
 
 
 
     public BeginQuizz(int quizzId, int userId, String currentTime) {
-//        JFrame frame = new JFrame("Quiz");
+//        chèn dữ liệu vào table Result
         addResult(userId, quizzId, currentTime);
-
         setContentPane(containerGame);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 450);
@@ -301,9 +301,9 @@ public class BeginQuizz extends JFrame {
             // Thêm mã để xử lý khi người dùng chọn "No" hoặc đóng hộp thoại ở đây
         }
     }
-//    public static void main(String[] args) throws SQLException {
-//        BeginQuizz quiz = new BeginQuizz(1,1, CurrentTime.getCurrentTime());
-//    }
+    public static void main(String[] args) throws SQLException {
+        BeginQuizz quiz = new BeginQuizz(1,1, CurrentTime.getCurrentTime());
+    }
 
 
 }

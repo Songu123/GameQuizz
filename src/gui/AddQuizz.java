@@ -1,28 +1,32 @@
 package gui;
 
-import entity.Question;
+import dao.AnswerDAO;
+import dao.QuestionDAO;
+import database.Database;
 import entity.Answer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 public class AddQuizz extends JFrame {
     public List<Answer> answerList = new ArrayList<>();
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
-    private JTextField textField4;
-    private JTextField textField5;
+    private JTextField contentQuestion;
+    private JTextField contentAnswerA;
+    private JTextField contentAnswerB;
+    private JTextField contentAnswerC;
+    private JTextField contentAnswerD;
     private JButton addNewQuestion;
     private JButton finishCreateQuizz;
-    private JLabel contentQuestion;
-    private JLabel contentAnswerA;
-    private JLabel contentAnswerB;
-    private JLabel contentAnswerC;
-    private JLabel contentAnswerD;
+    private JLabel questionLabel;
+    private JLabel answerA;
+    private JLabel answerB;
+    private JLabel answerC;
+    private JLabel answerD;
     private JRadioButton aRadioButton;
     private JRadioButton bRadioButton;
     private JRadioButton cRadioButton;
@@ -48,6 +52,8 @@ public class AddQuizz extends JFrame {
         addNewQuestion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                int questionId = 0;
+
                 String textQuestion = contentQuestion.getText();
 
                 String answerA = contentAnswerA.getText();
@@ -55,37 +61,110 @@ public class AddQuizz extends JFrame {
                 String answerC = contentAnswerC.getText();
                 String answerD = contentAnswerD.getText();
 
-                ButtonModel buttonModel = buttonGroup.getSelection();
-                if (buttonModel.isSelected()){
-                    String answerCorrect = buttonModel.getActionCommand();
-                }else {
-                    JOptionPane.showMessageDialog(null, "Bạn chưa chọn đáp án chính xác!");
-                }
-
-
-
-
+                    String answerCorrect = getSelectedButtonText(buttonGroup);
+                    questionId = addQuestion(textQuestion, quizzId);
+                    addListAnswer(questionId, answerA, answerB, answerC, answerD, answerCorrect);
+                resetFields();
             }
         });
+
         finishCreateQuizz.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
+                    JOptionPane.showMessageDialog(null, "Đã hoàn thành đề!");
+                    dispose();
             }
         });
+
+
     }
 
-    public void addListAnswer(int questionId, String answerA, String answerB, String answerC, String answerD, String answerCorrect){
-        for (int i = 0; i < 3; i++) {
-            switch (i){
+    private String getSelectedButtonText(ButtonGroup buttonGroup) {
+        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Bạn chưa chọn đáp án chính xác!");
+        return null; // Return null if no button is selected
+    }
+
+
+    public void addListAnswer(int questionId, String answerA, String answerB, String answerC, String answerD, String answerCorrect) {
+        for (int i = 0; i < 4; i++) {
+            boolean isCorrect = false;
+            String answerContent = "";
+
+            switch (i) {
                 case 0:
-                    Answer answer = new Answer(answerA,questionId,)
+                    if (answerCorrect.equals("A")) {
+                        isCorrect = true;
+                    }
+                    answerContent = answerA;
                     break;
+                case 1:
+                    if (answerCorrect.equals("B")) {
+                        isCorrect = true;
+                    }
+                    answerContent = answerB;
+                    break;
+                case 2:
+                    if (answerCorrect.equals("C")) {
+                        isCorrect = true;
+                    }
+                    answerContent = answerC;
+                    break;
+                case 3:
+                    if (answerCorrect.equals("D")) {
+                        isCorrect = true;
+                    }
+                    answerContent = answerD;
+                    break;
+                default:
+                    break;
+            }
+
+            Answer answer = new Answer(answerContent, questionId, isCorrect);
+            answerList.add(answer);
+        }
+
+        for (Answer a: answerList){
+            try {
+                AnswerDAO answerDAO = new AnswerDAO(Database.getConnection());
+                answerDAO.insertAnswer(a.getContent(), a.getQuestionId(), a.isCorrect());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }
 
-    public static void main(String[] args) {
-        AddQuizz addQuizz = new AddQuizz(1);
+    public int addQuestion(String content, int quizzId){
+        int questionId = 0;
+        try {
+            QuestionDAO questionDAO = new QuestionDAO(Database.getConnection());
+            questionId = questionDAO.insertQuestion(content, quizzId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return questionId;
     }
+
+    private void resetFields() {
+        // Clear text of JTextField
+        contentQuestion.setText("");
+        AddQuizz.this.contentAnswerA.setText("");
+        AddQuizz.this.contentAnswerB.setText("");
+        AddQuizz.this.contentAnswerC.setText("");
+        AddQuizz.this.contentAnswerD.setText("");
+
+        // Deselect all radio buttons in ButtonGroup
+        buttonGroup.clearSelection();
+    }
+
+
+//    public static void main(String[] args) {
+////        AddQuizz addQuizz = new AddQuizz(1);
+//    }
 }
