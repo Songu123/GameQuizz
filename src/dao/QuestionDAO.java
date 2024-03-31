@@ -5,10 +5,7 @@ import entity.Question;
 import entity.Quizz;
 import entity.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,19 +35,23 @@ public class QuestionDAO {
     }
 
     public int insertQuestion(String content, int quizzId){
-        int questionId = 0;
-        String sql = "Insert into questions(content, quizz_id) values (?, ?)";
+        String sql = "INSERT INTO questions(content, quizz_id) VALUES (?, ?)";
         try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, content);
             ps.setInt(2, quizzId);
             ps.executeUpdate();
 
+            // Get the generated keys to retrieve the question ID
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1); // Retrieve the ID
+            } else {
+                throw new SQLException("Inserting question failed, no ID obtained.");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        return questionId;
     }
 
     public int getCountQuestion(int quizzId){

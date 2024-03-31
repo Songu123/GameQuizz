@@ -19,11 +19,13 @@ public class LoginAdmin extends JFrame {
     private JPasswordField passwordAdmin;
     private JPanel containerAdmin;
     private JButton logInButton;
+    private JCheckBox showPasswordCheckBox;
+    private JLabel loginLabel;
 
     public LoginAdmin(){
         setContentPane(containerAdmin);
         setTitle("Login Admin");
-        setSize(300,250);
+        setSize(400,300);
         setLocationRelativeTo(null);
         setVisible(true);
         logInButton.addActionListener(new ActionListener() {
@@ -33,6 +35,16 @@ public class LoginAdmin extends JFrame {
                 String password = new String(passwordAdmin.getPassword()); // Use getPassword() to retrieve the password securely
                 boolean loginSuccess = checkLogin(username, password);
                 if (loginSuccess) dispose();
+            }
+        });
+        showPasswordCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (showPasswordCheckBox.isSelected()){
+                    passwordAdmin.setEchoChar((char)0);
+                }else {
+                    passwordAdmin.setEchoChar((Character) UIManager.get("PasswordField.echoChar"));
+                }
             }
         });
     }
@@ -62,7 +74,7 @@ public class LoginAdmin extends JFrame {
 
             // Hiển thị thông báo nếu không tìm thấy người dùng hoặc không phù hợp với vai trò admin
             if (!found) {
-                JOptionPane.showMessageDialog(null, "Incorrect username or password. Please try again!");
+                JOptionPane.showMessageDialog(null, "Mật khẩu sai! Vui lòng nhập lại!");
             }
 
             return flag;
@@ -71,4 +83,8 @@ public class LoginAdmin extends JFrame {
         }
     }
 
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(LoginAdmin::new);
+    }
 }

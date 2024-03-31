@@ -8,7 +8,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <component id="dc5fb" class="javax.swing.JLabel" binding="contentQuestion">
+      <component id="dc5fb" class="javax.swing.JLabel" binding="questionLabel">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -16,7 +16,7 @@
           <text value="Câu hỏi"/>
         </properties>
       </component>
-      <component id="c4918" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+      <component id="c4918" class="javax.swing.JTextField" binding="contentQuestion">
         <constraints>
           <grid row="0" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -24,7 +24,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="23f2b" class="javax.swing.JLabel" binding="contentAnswerA">
+      <component id="23f2b" class="javax.swing.JLabel" binding="answerA">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -33,7 +33,7 @@
           <text value="Đáp án A"/>
         </properties>
       </component>
-      <component id="e5dd2" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+      <component id="e5dd2" class="javax.swing.JTextField" binding="contentAnswerA">
         <constraints>
           <grid row="1" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -41,7 +41,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="31e42" class="javax.swing.JLabel" binding="contentAnswerB">
+      <component id="31e42" class="javax.swing.JLabel" binding="answerB">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -49,7 +49,7 @@
           <text value="Đáp án B"/>
         </properties>
       </component>
-      <component id="eb7a7" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+      <component id="eb7a7" class="javax.swing.JTextField" binding="contentAnswerB">
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -57,7 +57,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="edefe" class="javax.swing.JLabel" binding="contentAnswerC">
+      <component id="edefe" class="javax.swing.JLabel" binding="answerC">
         <constraints>
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -65,7 +65,7 @@
           <text value="Đáp án C"/>
         </properties>
       </component>
-      <component id="c81a0" class="javax.swing.JTextField" binding="textField4" default-binding="true">
+      <component id="c81a0" class="javax.swing.JTextField" binding="contentAnswerC">
         <constraints>
           <grid row="3" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -73,7 +73,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="eb3e9" class="javax.swing.JLabel" binding="contentAnswerD">
+      <component id="eb3e9" class="javax.swing.JLabel" binding="answerD">
         <constraints>
           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -81,7 +81,7 @@
           <text value="Đáp án D"/>
         </properties>
       </component>
-      <component id="5e71a" class="javax.swing.JTextField" binding="textField5" default-binding="true">
+      <component id="5e71a" class="javax.swing.JTextField" binding="contentAnswerD">
         <constraints>
           <grid row="4" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -89,7 +89,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="6093e" class="javax.swing.JButton" binding="thêmCâuHỏiButton" default-binding="true">
+      <component id="6093e" class="javax.swing.JButton" binding="addNewQuestion">
         <constraints>
           <grid row="6" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -97,7 +97,7 @@
           <text value="Thêm câu hỏi"/>
         </properties>
       </component>
-      <component id="69942" class="javax.swing.JButton" binding="tạoButton" default-binding="true">
+      <component id="69942" class="javax.swing.JButton" binding="finishCreateQuizz">
         <constraints>
           <grid row="6" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>

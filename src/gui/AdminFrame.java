@@ -36,11 +36,9 @@ public class AdminFrame extends JFrame {
         btnAddQuiz.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 String title = quizzTitle();
                 addQuizz(title, userId);
-
-
+                AddQuizz addQuizz = new AddQuizz(quizzIdCurrent);
             }
         });
 
