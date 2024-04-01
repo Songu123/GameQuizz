@@ -64,7 +64,7 @@
         <properties>
           <alignmentX value="1.0"/>
           <alignmentY value="1.0"/>
-          <font size="72"/>
+          <font size="48"/>
           <text value="Login"/>
         </properties>
       </component>
