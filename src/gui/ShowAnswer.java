@@ -6,6 +6,7 @@ import dao.ResultDetailDAO;
 import database.Database;
 import entity.Answer;
 import entity.Question;
+import entity.QuizHistoryEntry;
 import entity.ResultDetail;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ public class ShowAnswer extends JFrame {
     private static List<ResultDetail> resultDetailList = new ArrayList<>();
 
     public List<Question> questions = new ArrayList<>();
-    public ShowAnswer(int quizId, int resultId) {
+    public ShowAnswer(int userId, int quizId, int resultId) {
         try {
             QuestionDAO questionDAO = new QuestionDAO(Database.getConnection());
             AnswerDAO answerDAO = new AnswerDAO(Database.getConnection());
@@ -81,6 +82,7 @@ public class ShowAnswer extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Đóng cửa sổ JFrame khi nút được nhấp
+                QuizHistoryFrame quizHistoryFrame = new QuizHistoryFrame(userId);
             }
         });
         getContentPane().add(closeButton, BorderLayout.SOUTH);

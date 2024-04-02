@@ -28,9 +28,7 @@ import java.util.List;
 public class QuizTopicSelection extends JFrame {
     private static List<Quizz> quizzList = new ArrayList<>();
     private List<Integer> indexQuizzList = new ArrayList<>();
-
     private String currentTime = CurrentTime.getCurrentTime();
-
     private JComboBox<String> quizComboBox;
     private JButton startButton;
     private JButton cancelButton; // Thêm nút cancel
@@ -50,7 +48,6 @@ public class QuizTopicSelection extends JFrame {
             List<String> contentQuizzList = new ArrayList<>();
             indexQuizzList = new ArrayList<>();
             for (Quizz q : quizzList) {
-                System.out.println(q);
                 contentQuizzList.add(q.getName());
                 indexQuizzList.add(q.getId());
             }
@@ -74,6 +71,7 @@ public class QuizTopicSelection extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startQuiz(userId);
+                dispose();
             }
         });
 
@@ -82,6 +80,7 @@ public class QuizTopicSelection extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Thực hiện hành động khi nút cancel được nhấn
                 dispose(); // Đóng cửa sổ hiện tại
+                UserFrame userFrame = new UserFrame(userId);
             }
         });
 
@@ -120,14 +119,5 @@ public class QuizTopicSelection extends JFrame {
         }
         return success;
     }
-}
 
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                new QuizTopicSelection();
-//            }
-//        });
-//    }
-//}
+}

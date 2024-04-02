@@ -20,10 +20,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class BeginQuizz extends JFrame {
-    private static Database database = new Database();
     private static List<Question> questionlist = new ArrayList<>();
-    private static List<Question> questionQuizz = new ArrayList<>();
-    private static List<Answer> answerQuizz = new ArrayList<Answer>();
     private static List<Answer> answerList = new ArrayList<>();
     private static Result result;
     private static int resultId;
@@ -66,9 +63,10 @@ public class BeginQuizz extends JFrame {
                 }
 
                 String selectedValue = getSelectedAnswerText(buttonGroup);
-                int selectedAnswerId = getSelectAnswerId(answerQuizz);
+                System.out.println(selectedValue);
+                int selectedAnswerId = getSelectAnswerId(answerList);
                 countQuestion = getCountQuestion(quizzId);
-                boolean isCorrect = getIsCorrect(answerQuizz, selectedAnswerId);
+                boolean isCorrect = getIsCorrect(answerList, selectedAnswerId);
 
                 try {
                     ResultDAO rd = new ResultDAO(Database.getConnection());
@@ -78,25 +76,20 @@ public class BeginQuizz extends JFrame {
                     throw new RuntimeException("Error while adding result details", e);
                 }
 
-                answerQuizz.clear();
+                answerList.clear();
 
-                if (index < questionQuizz.size()-1) {
+                if (index < questionlist.size()-1) {
                     // Move to the next question
                     index++;
                     int i = 0;
-
+                    int questionId = questionlist.get(index).getId();
                     indexQuestion.setText("Câu " + (index + 1) + ":");
-                    jTextQuestion.setText(questionQuizz.get(index).getContent());
+                    jTextQuestion.setText(questionlist.get(index).getContent());
 
-                    // Populate answer options for the next question
-                    for (Answer a : answerList) {
-                        if (a.getQuestionId() == questionQuizz.get(index).getId()) {
-                            answerQuizz.add(a);
-                        }
-                    }
+                    answerList = getAnswerQuizz(questionId);
 
                     // Set answer options on the UI
-                    for (Answer a : answerQuizz) {
+                    for (Answer a : answerList) {
                         switch (i) {
                             case 0:
                                 answer1.setText(a.getContent());
@@ -119,51 +112,41 @@ public class BeginQuizz extends JFrame {
 
                     buttonGroup.clearSelection(); // Clear the selection of JRadioButtons
                 } else {
-
                     JOptionPane.showMessageDialog(null, "Bạn đã hoàn thành bài thi!"); // Display completion message
+                    dispose();
                     JOptionPane.showMessageDialog(null, "Số câu đúng: " + getPointQuizz(resultId) + "/" + countQuestion); // Display completion message
                     int result = showConfirmDialog(getPointQuizz(resultId), countQuestion);
-                    checkCofirmDialog(result, quizzId,resultId);
-                    questionQuizz.clear();
-                    dispose();
+                    checkCofirmDialog(userId, result, quizzId,resultId);
+                    questionlist.clear();
+                    answerList.clear();
+//                    Tắt jframe và trở lại chọn đề
                 }
             }
         });
 
 
-
-        try {
-            QuestionDAO questionDAO = new QuestionDAO(Database.getConnection());
-            AnswerDAO answerDAO = new AnswerDAO(Database.getConnection());
-//            List<Answer> answerQuizz = new ArrayList<>();
-            boolean isExist = false;
-
-            questionlist = questionDAO.getAllQuestions();
-
-            for (Question q: questionlist){
-                if (q.getQuizzes_id() == quizzId) {
-//                    isExist = true;
-                    questionQuizz.add(q);
-                }
-            }
-
-                System.out.println(questionQuizz);
-
-                answerList = answerDAO.getAllAnswers();
+        // Kiểm tra nếu danh sách câu hỏi không null và có phần tử
+        questionlist = getQuestionQuizz(quizzId);
+        if (questionlist != null && !questionlist.isEmpty()) {
+            System.out.println(questionlist);
+            // Hiển thị câu hỏi đầu tiên (nếu có)
+            if (!questionlist.isEmpty()) {
                 index = 0;
-
+                int questionId = questionlist.get(index).getId();
                 indexQuestion.setText("Câu " + (index + 1) + ":");
-                for (Answer a: answerList){
-                    if (a.getQuestionId() == questionQuizz.get(index).getId()){
-                        answerQuizz.add(a);
-                    }
-                }
 
-                jTextQuestion.setText(questionQuizz.get(index).getContent());
-                int i = 0;
-                for (Answer a : answerQuizz) {
-                    if (a.getQuestionId() == questionlist.get(index).getId()) {
+                answerList = getAnswerQuizz(questionId);
+                System.out.println(answerList);
+                // Lấy danh sách các câu trả lời
 
+                // Kiểm tra nếu danh sách câu trả lời không null và có phần tử
+                if (answerList != null && !answerList.isEmpty()) {
+                    // Lặp qua danh sách câu trả lời và lọc ra các câu trả lời liên quan đến câu hỏi hiện tại
+                    // Hiển thị nội dung câu hỏi và các phương án trả lời
+                    jTextQuestion.setText(questionlist.get(index).getContent());
+
+                    int i = 0;
+                    for (Answer a : answerList) {
                         switch (i) {
                             case 0:
                                 answer1.setText(a.getContent());
@@ -177,23 +160,58 @@ public class BeginQuizz extends JFrame {
                             case 3:
                                 answer4.setText(a.getContent());
                                 break;
-                            default:
-                                i = 0;
-                                return;
                         }
                         i++;
                     }
+                } else {
+                    System.out.println("No answers found for questions in the quiz.");
                 }
-            // Check if any radio button is selected
+            } else {
+                System.out.println("No questions found for the quiz.");
+            }
+        } else {
+            System.out.println("No questions found in the database.");
+        }
+
+        buttonGroup.clearSelection(); // Clear the selection of JRadioButtons
+    }
+
+//    Lấy danh sách câu hỏi từ đề thi
+public List<Question> getQuestionQuizz(int quizzId) {
+    List<Question> questionList = new ArrayList<>();
+    try {
+        QuestionDAO questionDAO = new QuestionDAO( Database.getConnection());
+        for (Question q: questionDAO.getAllQuestions()){
+            if (q.getQuizzes_id() == quizzId){
+                questionList.add(q);
+            }
+        }
+
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+    return questionList;
+}
 
 
-            buttonGroup.clearSelection(); // Clear the selection of JRadioButtons
+    public List<Answer> getAnswerQuizz(int questionId){
+        List<Answer> answerList = new ArrayList<>();
+        try {
+            AnswerDAO answerDAO = new AnswerDAO(Database.getConnection());
+            System.out.println(answerDAO.getAllAnswers());
+            for (Answer a: answerDAO.getAllAnswers()){
+                if (a.getQuestionId() == questionId){
+                    answerList.add(a);
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return answerList;
     }
 
-// Hàm lấy dữ liệu đáp án đã chọn
+
+    // Hàm lấy dữ liệu đáp án đã chọn
     private String getSelectedAnswerText(ButtonGroup buttonGroup) {
         for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
@@ -216,8 +234,6 @@ public class BeginQuizz extends JFrame {
             }
         }
 
-//        System.out.println(getSelectedAnswerText(buttonGroup));
-//        System.out.println(selectedAnswerId);
         return selectedAnswerId;
     }
 
@@ -291,19 +307,20 @@ public class BeginQuizz extends JFrame {
         return JOptionPane.showConfirmDialog(null, message, "Xác nhận xem lại bài thi", JOptionPane.YES_NO_OPTION);
     }
 
-    public static void checkCofirmDialog(int result, int quizId, int resultId){
+    public static void checkCofirmDialog(int userId, int result, int quizId, int resultId){
         if (result == JOptionPane.YES_OPTION) {
             System.out.println("Bạn đã chọn Yes để xem lại bài thi.");
-            ShowAnswer showAnswer = new ShowAnswer(quizId, resultId);
+            ShowAnswer showAnswer = new ShowAnswer(userId, quizId, resultId);
 
         } else {
             System.out.println("Bạn đã chọn No hoặc đã đóng hộp thoại.");
-            // Thêm mã để xử lý khi người dùng chọn "No" hoặc đóng hộp thoại ở đây
+            QuizTopicSelection quizTopicSelection = new QuizTopicSelection(userId);
+
         }
     }
-    public static void main(String[] args) throws SQLException {
-        BeginQuizz quiz = new BeginQuizz(1,1, CurrentTime.getCurrentTime());
-    }
+//    public static void main(String[] args) throws SQLException {
+//        BeginQuizz quiz = new BeginQuizz(1,1, CurrentTime.getCurrentTime());
+//    }
 
 
 }

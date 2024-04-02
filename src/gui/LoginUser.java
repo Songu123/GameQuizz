@@ -4,6 +4,7 @@ import dao.UserDAO;
 import database.Database;
 import entity.User;
 
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +23,7 @@ public class LoginUser extends JFrame {
     private JLabel password;
     private JPanel containerLogin;
     private JButton logInButton;
+    private JCheckBox showPasswordCheckBox;
 
     public LoginUser(){
         setContentPane(containerLogin);
@@ -38,6 +40,17 @@ public class LoginUser extends JFrame {
                 if (loginSuccess) dispose();
             }
         });
+
+        showPasswordCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (showPasswordCheckBox.isSelected()){
+                    jPassword.setEchoChar((char)0);
+                }else {
+                    jPassword.setEchoChar((Character) UIManager.get("PasswordField.echoChar"));
+                }
+            }
+        });
     }
 
     public static boolean checkLogin(String username, String password){
@@ -48,14 +61,16 @@ public class LoginUser extends JFrame {
             userList = userDAO.getAllUsers();
             for (User u : userList){
                 if (u.getName().equals(username) && u.getPassword().equals(password)){
-                    QuizTopicSelection quizTopicSelection = new QuizTopicSelection(u.getId());
-                    quizTopicSelection.setVisible(true);
+                    UserFrame userFrame = new UserFrame(u.getId());
                     flag = true;
-                }else {
-                    JOptionPane.showMessageDialog(null, "Incorrect username or password. Please try again.");
+
                 }
             }
+            if (!flag){
+                JOptionPane.showMessageDialog(null, "Username hoặc mật khẩu không chính xác! Vui lòng nhập lại!");
+            }
             return flag;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

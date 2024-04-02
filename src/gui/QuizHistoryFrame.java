@@ -80,6 +80,7 @@ public class QuizHistoryFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Đóng JFrame khi nút Cancel được nhấn
+                UserFrame userFrame = new UserFrame(userId);
             }
         });
         add(cancelButton, BorderLayout.SOUTH);
@@ -115,7 +116,7 @@ public class QuizHistoryFrame extends JFrame {
         return quizHistoryEntryList;
     }
 
-    public static void main(String[] args) {
-        QuizHistoryFrame quizHistoryFrame = new QuizHistoryFrame(1);
-    }
+//    public static void main(String[] args) {
+//        QuizHistoryFrame quizHistoryFrame = new QuizHistoryFrame(1);
+//    }
 }

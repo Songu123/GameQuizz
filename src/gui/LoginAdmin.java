@@ -74,7 +74,7 @@ public class LoginAdmin extends JFrame {
 
             // Hiển thị thông báo nếu không tìm thấy người dùng hoặc không phù hợp với vai trò admin
             if (!found) {
-                JOptionPane.showMessageDialog(null, "Mật khẩu sai! Vui lòng nhập lại!");
+                JOptionPane.showMessageDialog(null, "Username hoặc mật khẩu không chính xác! Vui lòng nhập lại!");
             }
 
             return flag;

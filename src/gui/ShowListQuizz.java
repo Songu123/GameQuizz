@@ -1,8 +1,5 @@
 package gui;
 
-import common.CurrentTime;
-
-import common.CurrentUser;
 import dao.QuizzDAO;
 import database.Database;
 import entity.ListQuizz;
@@ -23,14 +20,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+public class ShowListQuizz {
 
+    private List<ListQuizz> listQuizzes = new ArrayList<>(); // Initialize here
 
-public class TableListQuizz {
-    private static List<ListQuizz> listQuizzes = new ArrayList<>();
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(TableListQuizz::createAndShowGUI);
-//    }
-    public TableListQuizz(int userId){
+    public ShowListQuizz(int userId){
         createAndShowGUI(userId);
     }
 
@@ -56,7 +50,7 @@ public class TableListQuizz {
         for (ListQuizz q : listQuizzes) {
             model.addRow(new Object[]{
                     index++,
-                    q.getNameQuizz(),q.getNameAuthor()
+                    q.getNameQuizz(), q.getNameAuthor()
             });
         }
 
@@ -98,39 +92,39 @@ public class TableListQuizz {
         frame.setVisible(true);
     }
 
-// Lấy danh sách đề quizz
-    public static void getQuizzList() {
-        List<ListQuizz> list = null;
-        List<Quizz> quizzList = null;
+    // Lấy danh sách đề quizz
+    public List<ListQuizz> getQuizzList() {
+        List<ListQuizz> list = new ArrayList<>(); // Initialize here
+        List<Quizz> quizzes = null;
         try {
             Connection connection = Database.getConnection();
             QuizzDAO quizzDAO = new QuizzDAO(connection);
 
-            quizzList = quizzDAO.getAllQuizzes();
+            quizzes = quizzDAO.getAllQuizzes();
 
-            for (Quizz quizz : quizzList) {
+            for (Quizz quizz : quizzes) {
                 ListQuizz listQuizz = new ListQuizz(quizz.getName(), getNameAuthor(quizz.getUserId()));
-                listQuizzes.add(listQuizz);
+                list.add(listQuizz);
             }
+            this.listQuizzes = list; // Assign to instance variable
+            return list;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void setCellsAlignment(JTable table, int alignment)
-    {
+    public void setCellsAlignment(JTable table, int alignment) {
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(alignment);
 
         TableModel tableModel = table.getModel();
 
-        for (int columnIndex = 0; columnIndex < tableModel.getColumnCount(); columnIndex++)
-        {
+        for (int columnIndex = 0; columnIndex < tableModel.getColumnCount(); columnIndex++) {
             table.getColumnModel().getColumn(columnIndex).setCellRenderer(rightRenderer);
         }
     }
 
-    public static String getNameAuthor(int userId){
+    public String getNameAuthor(int userId) {
         String sql = "Select * from users where id = ?";
         String nameAuthor = "";
         try {
@@ -138,7 +132,7 @@ public class TableListQuizz {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 nameAuthor = rs.getString("username");
             }
             return nameAuthor;
@@ -150,6 +144,6 @@ public class TableListQuizz {
     }
 
     public static void main(String[] args) {
-        TableListQuizz tableListQuizz = new TableListQuizz(1);
+//        ShowListQuizz showListQuizz = new ShowListQuizz(1);
     }
 }

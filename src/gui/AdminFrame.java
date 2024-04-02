@@ -18,18 +18,20 @@ public class AdminFrame extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 1));
+        panel.setLayout(new GridLayout(5, 1));
 
         JButton btnViewQuizzes = new JButton("Xem Danh Sách Đề");
         JButton btnAddQuiz = new JButton("Thêm Đề");
         JButton btnViewUsers = new JButton("Xem Danh Sách Người Dùng");
         JButton btnViewResults = new JButton("Xem Kết Quả Người Dùng");
+        JButton btnCancel = new JButton("Thoát");
 
         btnViewQuizzes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                TableListQuizz tableListQuizz = new TableListQuizz();
+                ShowListQuizz tableListQuizz = new ShowListQuizz(userId);
+                dispose();
             }
         });
 
@@ -38,23 +40,32 @@ public class AdminFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String title = quizzTitle();
                 addQuizz(title, userId);
-                AddQuizz addQuizz = new AddQuizz(quizzIdCurrent);
+                AddQuizz addQuizz = new AddQuizz(userId, quizzIdCurrent);
+                dispose();
             }
         });
 
         btnViewUsers.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Xử lý khi người dùng nhấn nút "Xem Danh Sách Người Dùng"
-                // Code để hiển thị danh sách người dùng
+                ShowUserList showUserList = new ShowUserList(userId);
+                dispose();
             }
         });
 
         btnViewResults.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Xử lý khi người dùng nhấn nút "Xem Kết Quả Người Dùng"
-                // Code để hiển thị kết quả của người dùng
+                dispose();
+                ShowResultUser showResultUser = new ShowResultUser(userId);
+            }
+        });
+
+        btnCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                dispose();
+                Main main = new Main();
             }
         });
 
@@ -62,7 +73,7 @@ public class AdminFrame extends JFrame {
         panel.add(btnAddQuiz);
         panel.add(btnViewUsers);
         panel.add(btnViewResults);
-
+        panel.add(btnCancel);
         add(panel);
         setVisible(true);
     }

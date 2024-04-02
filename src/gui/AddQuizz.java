@@ -35,7 +35,7 @@ public class AddQuizz extends JFrame {
 
     private ButtonGroup buttonGroup;
 
-    public AddQuizz(int quizzId){
+    public AddQuizz(int userId, int quizzId){
         setTitle("Create Question");
         setContentPane(addQuizzPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,6 +73,7 @@ public class AddQuizz extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                     JOptionPane.showMessageDialog(null, "Đã hoàn thành đề!");
                     dispose();
+                    AdminFrame adminFrame = new AdminFrame(userId);
             }
         });
 

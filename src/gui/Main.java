@@ -26,12 +26,14 @@ public class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 LoginAdmin loginAdmin = new LoginAdmin();
+                dispose();
             }
         });
         USERButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 LoginUser loginUser = new LoginUser();
+                dispose();
             }
         });
         CANCELButton.addActionListener(new ActionListener() {
