@@ -1,5 +1,8 @@
 package gui;
 
+import common.CurrentTime;
+
+import common.CurrentUser;
 import dao.QuizzDAO;
 import database.Database;
 import entity.ListQuizz;
@@ -27,11 +30,11 @@ public class TableListQuizz {
 //    public static void main(String[] args) {
 //        SwingUtilities.invokeLater(TableListQuizz::createAndShowGUI);
 //    }
-    public TableListQuizz(){
-        createAndShowGUI();
+    public TableListQuizz(int userId){
+        createAndShowGUI(userId);
     }
 
-    private void createAndShowGUI() {
+    private void createAndShowGUI(int userId) {
         JFrame frame = new JFrame("Quiz Table Example");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
@@ -82,11 +85,13 @@ public class TableListQuizz {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose(); // Close the frame
+                AdminFrame adminFrame = new AdminFrame(userId);
             }
         });
 
+
         frame.add(scrollPane, BorderLayout.CENTER);
-        frame.add(buttonPanel, BorderLayout.SOUTH); // Add button panel to the bottom
+        frame.add(buttonPanel, BorderLayout.SOUTH);
 
 
         // Display the frame
@@ -145,6 +150,6 @@ public class TableListQuizz {
     }
 
     public static void main(String[] args) {
-        TableListQuizz tableListQuizz = new TableListQuizz();
+        TableListQuizz tableListQuizz = new TableListQuizz(1);
     }
 }
