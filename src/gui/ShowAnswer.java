@@ -82,7 +82,7 @@ public class ShowAnswer extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Đóng cửa sổ JFrame khi nút được nhấp
-                QuizHistoryFrame quizHistoryFrame = new QuizHistoryFrame(userId);
+                UserFrame userFrame = new UserFrame(userId);
             }
         });
         getContentPane().add(closeButton, BorderLayout.SOUTH);
@@ -118,8 +118,4 @@ public class ShowAnswer extends JFrame {
         }
         return userAnswer;
     }
-
-//    public static void main(String[] args) {
-//        ShowAnswer showAnswer = new ShowAnswer(1, 14);
-//    }
 }
