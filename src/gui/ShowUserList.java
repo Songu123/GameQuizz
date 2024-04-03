@@ -77,7 +77,7 @@ public class ShowUserList {
         List<User> userList = getListUser();
         int index = 1;
         for (User u : userList) {
-            Object[] row = {index, u.getName(), u.getPassword()};
+            Object[] row = {index, u.getName(), u.getEmail()};
             model.addRow(row);
             index++;
         }
